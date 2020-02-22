@@ -138,8 +138,8 @@
 
 <script>
 export default {
-  name: "articleTags"
-};
+  name: 'articleTags'
+}
 </script>
 
 <style lang="less">
@@ -248,4 +248,3 @@ export default {
   }
 }
 </style>
-

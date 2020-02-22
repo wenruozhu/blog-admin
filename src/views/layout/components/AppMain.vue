@@ -10,13 +10,13 @@
 
 <script>
 export default {
-  name: "appmain",
+  name: 'appmain',
   computed: {
-    key() {
-      return this.$route.fullPath;
+    key () {
+      return this.$route.fullPath
     }
   }
-};
+}
 </script>
 
 <style lang="less">
@@ -60,4 +60,3 @@ export default {
   }
 }
 </style>
-

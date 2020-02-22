@@ -1,10 +1,18 @@
 const path = require('path')
-
+const webpack = require('webpack')
 function resolve(dir) {
     return path.join(__dirname, './', dir)
 }
 
 module.exports = {
+    lintOnSave: false,//暂时关闭eslint
+    configureWebpack: {
+        plugins: [
+            new webpack.ProvidePlugin({
+                axios: 'axios'
+            })
+        ]
+    },
     chainWebpack: config => {
         // svg loader
         const svgRule = config.module.rule('svg') // 找到svg-loader
@@ -33,5 +41,5 @@ module.exports = {
                 changeOrigin: true
             }
         }
-    },
+    }
 }

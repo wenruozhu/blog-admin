@@ -13,8 +13,8 @@
 
 <script>
 export default {
-  name: "dashboard"
-};
+  name: 'dashboard'
+}
 </script>
 <style lang="less">
 .dashboard {
@@ -41,4 +41,3 @@ export default {
   }
 }
 </style>
-

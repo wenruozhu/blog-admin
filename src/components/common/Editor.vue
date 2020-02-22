@@ -1,81 +1,132 @@
 <template>
-    <div class="editor">
-        <div id="toolbar-container"></div>
-        <div id="editor">
-            <p></p>
-        </div>
-        <!-- <button @click="getContent()">发布</button> -->
-    </div>
+  <div id="app">
+    <froala id="edit" :tag="'textarea'" :config="config" v-model="content"></froala>
+  </div>
 </template>
-
 <script>
-import CKEditor from '@ckeditor/ckeditor5-build-decoupled-document'
-import axios from 'axios';
-export default {
-    name:'editor',
-    props: ['content'],
-    data() {
-        return {
-            editor: null,
-            content:''
-        }
-    },
-    mounted() {
-        this.initCKEditor()
-    },
-    methods: {
-        initCKEditor() {
-            class uploadAdapter{
-                constructor(loader){
-                    this.loader = loader
-                }
-                upload() {
-                    return new Promise((resolve, reject) => {
-                        const data = new FormData();
-                        data.append('upload', this.loader.file);
-                        data.append('allowSize', 10)//允许图片上传的大小10兆
-                        /* axios.post('/uploadImage',{
-                            data: data
-                        }).then(data => {
-                            if(data.res){
-                                resolve({
-                                    default: data.url
-                                });
-                            }else{
-                                reject(data.msg);
-                            }
-                        }) */
-                    })
-                }
-                abort(){
+import VueFroala from "vue-froala-wysiwyg";
 
-                }
-            }
-            /* , {
-            ckfinder: {
-                uploadUrl: '/admin/Upload/uploadUrl'
-                //后端处理上传逻辑返回json数据,包括uploaded(选项true/false)和url两个字段
-            }
-            }) */
-            CKEditor.create(document.querySelector('#editor')).
-            then(editor => {
-                const toolbarContainer = document.querySelector('#toolbar-container');
-                toolbarContainer.appendChild(editor.ui.view.toolbar.element);
-                this.editor = editor //将编辑器保存起来，用来随时获取编辑器中的内容等，执行一些操作
-                editor.plugins.get('FileRepository').createUploadAdapter = (loader)=>{
-                    return new uploadAdapter(loader);
-                };
-            }).catch(error => {
-                alert(error);
-            });
+export default {
+  name: "app",
+  data() {
+    return {
+      content: "Edit Your Content Here!",
+      config: {
+        events: {
+          initialized: function() {
+            console.log("initialized");
+          }
         },
-        getContent() {
-            this.content = this.editor.getData()
+        quickInsertEnabled: false,
+        height: 500,
+        imageStyles: {
+          class1: "Class 1",
+          class2: "Class 2"
+        },
+        imageEditButtons: [
+          "imageReplace",
+          "imageAlign",
+          "imageCaption",
+          "imageRemove",
+          "|",
+          "imageLink",
+          "linkOpen",
+          "linkEdit",
+          "linkRemove",
+          "-",
+          "imageDisplay",
+          "imageStyle",
+          "imageAlt",
+          "imageSize"
+        ],
+        /* dragInline: true,
+          pluginsEnabled: ["image", "link", "draggable"], */
+        toolbarButtons: {
+          // Key represents the more button from the toolbar.
+
+          moreText: {
+            // List of buttons used in the  group.
+            buttons: [
+              "bold",
+              "italic",
+              "underline",
+              "strikeThrough",
+              "subscript",
+              "superscript",
+              "fontFamily",
+              "fontSize",
+              "textColor",
+              "backgroundColor",
+              "inlineClass",
+              "inlineStyle",
+              "clearFormatting"
+            ],
+
+            // Alignment of the group in the toolbar.
+            align: "left",
+
+            // By default, 3 buttons are shown in the main toolbar. The rest of them are available when using the more button.
+            buttonsVisible: 3
+          },
+
+          moreParagraph: {
+            buttons: [
+              "alignLeft",
+              "alignCenter",
+              "formatOLSimple",
+              "alignRight",
+              "alignJustify",
+              "formatOL",
+              "formatUL",
+              "paragraphFormat",
+              "paragraphStyle",
+              "lineHeight",
+              "outdent",
+              "indent",
+              "quote"
+            ],
+            align: "left",
+            buttonsVisible: 3
+          },
+
+          moreRich: {
+            buttons: [
+              "insertLink",
+              "insertImage",
+              "insertVideo",
+              "insertTable",
+              "emoticons",
+              "fontAwesome",
+              "specialCharacters",
+              "embedly",
+              "insertFile",
+              "insertHR"
+            ],
+            align: "left",
+            buttonsVisible: 3
+          },
+
+          moreMisc: {
+            buttons: [
+              "undo",
+              "redo",
+              "fullscreen",
+              "print",
+              "getPDF",
+              "spellChecker",
+              "selectAll",
+              "html",
+              "help"
+            ],
+            align: "right",
+            buttonsVisible: 2
+          }
         }
-    },
+      }
+    }
+  }
 }
 </script>
 
-<style>
-
+<style lang="less">
 </style>

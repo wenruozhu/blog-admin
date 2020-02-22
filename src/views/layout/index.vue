@@ -11,12 +11,12 @@ import HeadNav from '@/components/common/HeadNav.vue'
 import SideNav from '@/components/common/SideNav.vue'
 import AppMain from './components/AppMain.vue'
 export default {
-    name: 'layout',
-    components:{
-        HeadNav,
-        SideNav,
-        AppMain
-    }
+  name: 'layout',
+  components: {
+    HeadNav,
+    SideNav,
+    AppMain
+  }
 }
 </script>
 

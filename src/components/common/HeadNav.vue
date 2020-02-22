@@ -15,24 +15,24 @@
         <li class="avatarList">
           <div class="avatar">
             <span>
-              <img src="../../assets/img/avatar.jpg" alt>
+              <img src="../../assets/img/avatar.jpg" alt />
             </span>
           </div>
           <div class="userMenu">
-              <div class="user">
-                  <h6>用户中心</h6>
-                  <ul>
-                      <li>个人信息</li>
-                      <li @click="logout">退出登录</li>
-                  </ul>
-              </div>
-              <div class="config">
-                  <h6>设置中心</h6>
-                  <ul>
-                      <li>个人设置</li>
-                      <li>系统设置</li>
-                  </ul>
-              </div>
+            <div class="user">
+              <h6>用户中心</h6>
+              <ul>
+                <li>个人信息</li>
+                <li @click="logout">退出登录</li>
+              </ul>
+            </div>
+            <div class="config">
+              <h6>设置中心</h6>
+              <ul>
+                <li>个人设置</li>
+                <li>系统设置</li>
+              </ul>
+            </div>
           </div>
         </li>
       </ul>
@@ -42,11 +42,11 @@
 <script>
 export default {
   name: "headNav",
-  methods:{
-      logout(){
-          localStorage.removeItem('joeyToken');
-          this.$router.push('/login')
-      }
+  methods: {
+    logout() {
+      localStorage.removeItem("joeyToken");
+      this.$router.push("/login");
+    }
   }
 };
 </script>
@@ -57,7 +57,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 12;
   background-color: rgb(48, 65, 86);
   .userName {
     padding-left: 18px;
@@ -70,8 +70,8 @@ export default {
   }
   .otherFn {
     float: right;
-    >ul {
-      >li {
+    > ul {
+      > li {
         height: 100%;
         line-height: 52px;
         float: left;
@@ -119,45 +119,46 @@ export default {
           color: #fff;
         }
       }
-      .avatarList{
-          position: relative;
-          .userMenu{
-              width: 120px;
-              max-height: 0;
-              overflow: hidden;
-              background-color: #fff;
-              border-radius: 6px;
-              position: absolute;
-              right: 0;
-              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-              transition: max-height .8s;
-              .user,.config{
-                  h6{
-                      font-size: 12px;
-                      color: rgba(0, 0, 0, 0.5);
-                      line-height: 1.5;
-                      padding: 8px 16px;
-                  }
-                  ul{
-                      li{
-                          font-size: 12px;
-                          color: rgba(0, 0, 0, 0.6);
-                          cursor: pointer;
-                          line-height: 40px;
-                          padding-left: 24px;
-                          padding-right: 28px;
-                          &:hover{
-                              color: rgba(0, 0, 0, 1);
-                          }
-                      }
-                  }
+      .avatarList {
+        position: relative;
+        .userMenu {
+          width: 120px;
+          max-height: 0;
+          overflow: hidden;
+          background-color: #fff;
+          border-radius: 6px;
+          position: absolute;
+          right: 0;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          transition: max-height 0.8s;
+          .user,
+          .config {
+            h6 {
+              font-size: 12px;
+              color: rgba(0, 0, 0, 0.5);
+              line-height: 1.5;
+              padding: 8px 16px;
+            }
+            ul {
+              li {
+                font-size: 12px;
+                color: rgba(0, 0, 0, 0.6);
+                cursor: pointer;
+                line-height: 40px;
+                padding-left: 24px;
+                padding-right: 28px;
+                &:hover {
+                  color: rgba(0, 0, 0, 1);
+                }
               }
-          }
-          &:hover{
-            .userMenu{
-              max-height: 230px;
             }
           }
+        }
+        &:hover {
+          .userMenu {
+            max-height: 230px;
+          }
+        }
       }
     }
   }

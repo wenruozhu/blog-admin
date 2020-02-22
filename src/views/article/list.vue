@@ -14,13 +14,7 @@
         <li>
           <div class="tagTitle">标签：</div>
           <ul>
-            <li class="cur">全部</li>
-            <li>CSS</li>
-            <li>JavaScript</li>
-            <li>Vue</li>
-            <li>React</li>
-            <li>Http</li>
-            <li>Node</li>
+            <li v-for="(tag,index) in tags" :key="index" @click="switchArticle()">{{tag}}</li>
           </ul>
         </li>
         <li>
@@ -157,17 +151,21 @@
 </template>
 
 <script>
-// import collapse from "../../assets/js/collapse";
-
 export default {
-  name: "list"
-  // components: {
-  //   collapse
-  // }
-};
+  name: 'list',
+  data () {
+    return {
+      tags: ['全部', 'CSS', 'JavaScript', 'Vue', 'React', 'Http', 'Node']
+    }
+  },
+  methods: {
+    switchArticle () {
+
+    }
+  }
+}
 </script>
 
 <style lang="less">
 @import "./list.less";
 </style>
-

@@ -39,8 +39,3 @@ textarea {
   background: 0 0;
   font-family: inherit;
 }
-.clear::after{
-    content: '';
-    display: block;
-    clear: both;
-}

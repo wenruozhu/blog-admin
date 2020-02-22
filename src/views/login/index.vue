@@ -19,35 +19,34 @@
     </div>
 </template>
 <script>
-import md5 from 'md5';
-import axios from 'axios';
+import md5 from 'md5'
 export default {
-    name: "login",
-    data() {
-        return {
-            username: "",
-            password: ""
-        };
-    },
-    methods: {
-        login(){
-            axios.post(
-                '/api/v1/tokens',
-                {
-                    username: this.username,
-                    password: md5(this.password)
-                }
-            ).then(res => {
-                const data = res.data
-                localStorage.setItem('joeyToken',data)
-                this.$router.push('/')
-            }).catch((err) => {
-                const errorMsg = err.response.data.error
-                alert(errorMsg)
-            });
-        }
+  name: 'login',
+  data () {
+    return {
+      username: '',
+      password: ''
     }
-};
+  },
+  methods: {
+    login () {
+      axios.post(
+        '/api/v1/tokens',
+        {
+          username: this.username,
+          password: md5(this.password)
+        }
+      ).then(res => {
+        const data = res.data
+        localStorage.setItem('joeyToken', data)
+        this.$router.push('/')
+      }).catch((err) => {
+        const errorMsg = err.response.data.error
+        alert(errorMsg)
+      })
+    }
+  }
+}
 </script>
 <style lang="less">
 .login {

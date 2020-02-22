@@ -88,8 +88,8 @@
 
 <script>
 export default {
-  name: "personal"
-};
+  name: 'personal'
+}
 </script>
 
 <style lang="less">
