@@ -68,20 +68,20 @@
 </template>
 
 <script>
-import collapse from '../../assets/js/collapse'
+import collapse from "../../assets/js/collapse";
 
 export default {
-  name: 'SideNav',
+  name: "SideNav",
   components: {
     collapse
   },
-  data () {
+  data() {
     return {
       article: false
-    }
+    };
   },
   methods: {}
-}
+};
 </script>
 <style lang="less">
 .sideNav {

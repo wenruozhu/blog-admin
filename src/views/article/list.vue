@@ -14,7 +14,12 @@
         <li>
           <div class="tagTitle">标签：</div>
           <ul>
-            <li v-for="(tag,index) in tags" :key="index" @click="switchArticle()">{{tag}}</li>
+            <li
+              v-for="(tag,index) in tags"
+              :key="index"
+              :class="{cur: tagIndex == index}"
+              @click="switchTag(index)"
+            >{{tag}}</li>
           </ul>
         </li>
         <li>
@@ -44,7 +49,7 @@
         <li>
           <div class="tagTitle">搜索：</div>
           <div class="searchArticle">
-            <input type="text" name="search" placeholder="标题，描述">
+            <input type="text" name="search" placeholder="标题，描述" />
             <span>
               <svg-icon icon-class="sousuo"></svg-icon>查询
             </span>
@@ -66,78 +71,15 @@
           </tr>
         </thead>
         <tbody style="width:100%">
-          <tr>
+          <tr v-for="(article,index) in allArticles">
             <td style="width:10%">
               <svg-icon icon-class="youjiantou"></svg-icon>
             </td>
-            <td>你不知道的JavaScript（上卷）</td>
-            <td>2019-2-8 12:28</td>
-            <td>Code</td>
-            <td>公开</td>
-            <td>发布</td>
-            <td>
-              <span>修改</span>
-              <span>私密</span>
-              <span>草稿</span>
-            </td>
-            <!-- <ul>
-              <li>
-                <span>标签</span>
-                <span>作用域和闭包</span>
-              </li>
-              <li>
-                <span>关键字</span>
-                <span>JavaScript function</span>
-              </li>
-              <li>
-                <span>描述</span>
-                <span>作用域是根据名称查找变量的一套规则。</span>
-              </li>
-            </ul>-->
-          </tr>
-          <!-- <collapse class="articleDetail" style="width:100%"> -->
-          <!-- <table> -->
-          <tr>
-            <td style="width:10%"></td>
-            <td>标签</td>
-            <td>作用域和闭包</td>
-          </tr>
-          <tr>
-            <td style="width:10%"></td>
-            <td>关键字</td>
-            <td>JavaScript function</td>
-          </tr>
-          <tr>
-            <td style="width:10%"></td>
-            <td>描述</td>
-            <td>作用域是根据名称查找变量的一套规则。</td>
-          </tr>
-          <!-- </table> -->
-          <!-- </collapse> -->
-          <tr>
-            <td style="width:10%">
-              <svg-icon icon-class="youjiantou"></svg-icon>
-            </td>
-            <td>你不知道的JavaScript（中卷）</td>
-            <td>2019-2-8 12:28</td>
-            <td>Code</td>
-            <td>公开</td>
-            <td>发布</td>
-            <td>
-              <span>修改</span>
-              <span>私密</span>
-              <span>草稿</span>
-            </td>
-          </tr>
-          <tr>
-            <td style="width:10%">
-              <svg-icon icon-class="youjiantou"></svg-icon>
-            </td>
-            <td>你不知道的JavaScript（下卷）</td>
-            <td>2019-2-8 12:28</td>
-            <td>Code</td>
-            <td>公开</td>
-            <td>发布</td>
+            <td>{{article.title}}</td>
+            <td>{{article.publishTime.substr(0,19).replace('T',' ')}}</td>
+            <td>{{article.category | category}}</td>
+            <td>{{article.isPublic | isPublic}}</td>
+            <td>{{article.articleState | articleState}}</td>
             <td>
               <span>修改</span>
               <span>私密</span>
@@ -152,18 +94,82 @@
 
 <script>
 export default {
-  name: 'list',
-  data () {
+  name: "list",
+  data() {
     return {
-      tags: ['全部', 'CSS', 'JavaScript', 'Vue', 'React', 'Http', 'Node']
+      allArticles: [],
+      tags: ["全部", "CSS", "JavaScript", "Vue", "React", "Http", "Node"],
+      tagIndex: 0
+    };
+  },
+  created() {
+    this.getAllAriticles();
+  },
+  filters: {
+    publishTime(val) {
+      console.log(typeof val);
+      let time = val;
+      time.substr(0, 19);
+      // console.log(time)
+      time.replace("T", " ");
+      // console.log(time)
+      return time;
+    },
+    category(val) {
+      switch (val) {
+        case 0:
+          return "Code";
+          break;
+        case 1:
+          return "Life";
+        default:
+          break;
+      }
+    },
+    isPublic(val) {
+      switch (val) {
+        case 0:
+          return "公开";
+          break;
+        case 1:
+          return "私密";
+        default:
+          break;
+      }
+    },
+    articleState(val) {
+      switch (val) {
+        case 0:
+          return "发布";
+          break;
+        case 1:
+          return "草稿";
+        default:
+          break;
+      }
     }
   },
   methods: {
-    switchArticle () {
-
+    switchTag(index) {
+      this.tagIndex = index;
+      let tags = index == 0 ? "" : this.tags[index];
+      axios
+        .get(`/api/v1/articles/queryArticle?tags=${tags}`)
+        .then(res => {
+          this.allArticles = res.data;
+        })
+        .catch(err => {});
+    },
+    getAllAriticles() {
+      axios
+        .get(`/api/v1/articles/getAllArticle`)
+        .then(res => {
+          this.allArticles = res.data;
+        })
+        .catch(err => {});
     }
   }
-}
+};
 </script>
 
 <style lang="less">

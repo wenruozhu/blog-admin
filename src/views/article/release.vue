@@ -5,15 +5,15 @@
       <ul>
         <li>
           <span>标题：</span>
-          <input type="text" name="title" v-model="title" placeholder="文章标题">
+          <input type="text" name="title" v-model="title" placeholder="文章标题" />
           <span>{{title}}</span>
         </li>
         <li>
           <span>分类：</span>
           <div class="category">
-            <input type="radio" name="category" checked value="code" v-model="category" id="code">
+            <input type="radio" name="category" checked value="0" v-model="category" id="code" />
             <label for="code">Code</label>
-            <input type="radio" name="category" value="life" v-model="category" id="life">
+            <input type="radio" name="category" value="1" v-model="category" id="life" />
             <label for="life">Life</label>
             <span>{{category}}</span>
           </div>
@@ -21,11 +21,11 @@
         <li>
           <span>公开：</span>
           <div class="public">
-            <input type="radio" name="public" checked value="public" v-model="show" id="public">
+            <input type="radio" name="public" checked value="0" v-model="articleState" id="public" />
             <label for="public">公开</label>
-            <input type="radio" name="public" value="private" v-model="show" id="private">
+            <input type="radio" name="public" value="1" v-model="articleState" id="private" />
             <label for="private">私密</label>
-            <span>{{show}}</span>
+            <span>{{articleState}}</span>
           </div>
         </li>
         <li>
@@ -33,34 +33,34 @@
           <div class="state">
             <input
               type="radio"
-              name="state"
+              name="published"
               checked
-              value="published"
-              v-model="state"
+              value="0"
+              v-model="isPublic"
               id="published"
-            >
+            />
             <label for="published">发布</label>
-            <input type="radio" name="state" value="draft" v-model="state" id="draft">
+            <input type="radio" name="draft" value="1" v-model="isPublic" id="draft" />
             <label for="draft">草稿</label>
-            <span>{{state}}</span>
+            <span>{{isPublic}}</span>
           </div>
         </li>
         <li>
           <span>tag：</span>
           <div class="tag">
-            <input type="checkbox" name="tag" value="css" id="css" v-model="tag">
+            <input type="checkbox" name="tag" value="CSS" id="css" v-model="tags" />
             <label for="css">CSS</label>
-            <input type="checkbox" name="tag" value="js" id="js" v-model="tag">
+            <input type="checkbox" name="tag" value="JavaScript" id="js" v-model="tags" />
             <label for="js">JavaScript</label>
-            <input type="checkbox" name="tag" value="vue" id="vue" v-model="tag">
+            <input type="checkbox" name="tag" value="Vue" id="vue" v-model="tags" />
             <label for="vue">Vue</label>
-            <input type="checkbox" name="tag" value="react" id="react" v-model="tag">
+            <input type="checkbox" name="tag" value="React" id="react" v-model="tags" />
             <label for="react">React</label>
-            <input type="checkbox" name="tag" value="http" id="http" v-model="tag">
+            <input type="checkbox" name="tag" value="Http" id="http" v-model="tags" />
             <label for="http">Http</label>
-            <input type="checkbox" name="tag" value="node" id="node" v-model="tag">
+            <input type="checkbox" name="tag" value="Node" id="node" v-model="tags" />
             <label for="node">Node</label>
-            <span>{{tag}}</span>
+            <span>{{tags}}</span>
           </div>
         </li>
         <li class="btn">
@@ -76,20 +76,20 @@
 <script>
 import VueFroala from "vue-froala-wysiwyg";
 export default {
-  name: 'release',
+  name: "release",
   data() {
     return {
-      title: '',
-      category: 'code',
-      show: 'public',
-      state: 'published',
-      tag: [],
+      articleId: "", //文章编号
+      title: "",
+      category: 0, //0 code 1 life
+      articleState: 0, //0 发布 1 草稿
+      isPublic: 0, //0
+      tags: [],
       content: "Edit Your Content Here!",
+      // 富文本编辑器配置
       config: {
         events: {
-          initialized: function() {
-            console.log("initialized");
-          }
+          initialized: function() {}
         },
         quickInsertEnabled: false,
         height: 500,
@@ -187,16 +187,54 @@ export default {
           }
         }
       }
-    }
+    };
+  },
+  created() {
+    axios
+      .post(
+        `/api/v1/articles`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.joeyToken}`
+          }
+        }
+      )
+      .then(res => {
+        this.articleId = res.data.insertId;
+      })
+      .catch(err => {});
   },
   methods: {
-      publishArticle(){
-          axios.put(
-              ``
-          )
-      }
-  },
-}
+    publishArticle() {
+      const params = {
+        articleId: this.articleId,
+        title: this.title,
+        category: this.category,
+        articleState: this.articleState,
+        isPublic: this.isPublic,
+        tags: JSON.stringify(this.tags),
+        content: this.content
+      };
+      axios
+        .put(`/api/v1/articles/publish/${this.articleId}`, params, {
+          headers: {
+            Authorization: `Bearer ${localStorage.joeyToken}`
+          }
+        })
+        .then(res => {
+          if (res.status == 200) {
+            this.$notify({
+              title: "成功",
+              message: "文章发布成功",
+              type: "success"
+            });
+            this.$router.push('/article/list')
+          }
+        });
+    }
+  }
+};
 </script>
 
 <style lang="less">
