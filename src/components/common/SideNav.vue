@@ -48,6 +48,14 @@
         </router-link>
       </li>
       <li>
+        <router-link to="/book">
+          <div class="menuItem">
+            <svg-icon icon-class="book"></svg-icon>
+            <span>阅读列表</span>
+          </div>
+        </router-link>
+      </li>
+      <li>
         <router-link to="/personal">
           <div class="menuItem">
             <svg-icon icon-class="gerenzhongxin"></svg-icon>

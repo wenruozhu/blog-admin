@@ -11,9 +11,9 @@
         <li>
           <span>分类：</span>
           <div class="category">
-            <input type="radio" name="category" checked value="0" v-model="category" id="code" />
+            <input type="radio" name="category" checked value="1" v-model="category" id="code" />
             <label for="code">Code</label>
-            <input type="radio" name="category" value="1" v-model="category" id="life" />
+            <input type="radio" name="category" value="2" v-model="category" id="life" />
             <label for="life">Life</label>
             <span>{{category}}</span>
           </div>
@@ -21,9 +21,9 @@
         <li>
           <span>公开：</span>
           <div class="public">
-            <input type="radio" name="public" checked value="0" v-model="articleState" id="public" />
+            <input type="radio" name="public" checked value="1" v-model="articleState" id="public" />
             <label for="public">公开</label>
-            <input type="radio" name="public" value="1" v-model="articleState" id="private" />
+            <input type="radio" name="public" value="2" v-model="articleState" id="private" />
             <label for="private">私密</label>
             <span>{{articleState}}</span>
           </div>
@@ -35,12 +35,12 @@
               type="radio"
               name="published"
               checked
-              value="0"
+              value="1"
               v-model="isPublic"
               id="published"
             />
             <label for="published">发布</label>
-            <input type="radio" name="draft" value="1" v-model="isPublic" id="draft" />
+            <input type="radio" name="draft" value="2" v-model="isPublic" id="draft" />
             <label for="draft">草稿</label>
             <span>{{isPublic}}</span>
           </div>
@@ -81,9 +81,9 @@ export default {
     return {
       articleId: "", //文章编号
       title: "",
-      category: 0, //0 code 1 life
-      articleState: 0, //0 发布 1 草稿
-      isPublic: 0, //0
+      category: 1, //1 code 2 life
+      articleState: 1, //1 发布 2 草稿
+      isPublic: 1, //1 公开 2 私密
       tags: [],
       content: "Edit Your Content Here!",
       // 富文本编辑器配置

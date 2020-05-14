@@ -56,6 +56,16 @@ const router = new VueRouter({
 			component: Login
 		},
 		{
+			path: '/book',
+			component: Layout,
+			redirect: 'book',
+			children: [{
+				path: '',
+				component: () => import('@/views/book/index'),
+				name: 'book'
+			}]
+		},
+		{
 			path: '/personal',
 			component: Layout,
 			redirect: 'personal',

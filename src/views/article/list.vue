@@ -18,32 +18,41 @@
               v-for="(tag,index) in tags"
               :key="index"
               :class="{cur: tagIndex == index}"
-              @click="switchTag(index)"
+              @click="tagIndex = index"
             >{{tag}}</li>
           </ul>
         </li>
         <li>
           <div class="tagTitle">分类：</div>
           <ul>
-            <li class="cur">全部</li>
-            <li>Code</li>
-            <li>Life</li>
+            <li
+              v-for="(category,index) in category"
+              :key="index"
+              :class="{cur: categoryIndex == index}"
+              @click="categoryIndex = index"
+            >{{category}}</li>
           </ul>
         </li>
         <li>
           <div class="tagTitle">公开：</div>
           <ul>
-            <li class="cur">全部</li>
-            <li>公开</li>
-            <li>私密</li>
+            <li
+              v-for="(item,index) in isPublic"
+              :key="index"
+              :class="{cur: isPublicIndex == index}"
+              @click="isPublicIndex = index"
+            >{{item}}</li>
           </ul>
         </li>
         <li>
           <div class="tagTitle">状态：</div>
           <ul>
-            <li class="cur">全部</li>
-            <li>已发布</li>
-            <li>草稿</li>
+            <li
+              v-for="(item,index) in articleState"
+              :key="index"
+              :class="{cur: articleStateIndex == index}"
+              @click="articleStateIndex = index"
+            >{{item}}</li>
           </ul>
         </li>
         <li>
@@ -99,28 +108,49 @@ export default {
     return {
       allArticles: [],
       tags: ["全部", "CSS", "JavaScript", "Vue", "React", "Http", "Node"],
-      tagIndex: 0
+      tagIndex: 0,
+      category: ["全部", "Code", "Life"],
+      categoryIndex: 0,
+      isPublic: ["全部", "公开", "私密"],
+      isPublicIndex: 0,
+      articleState: ["全部", "已发布", "草稿"],
+      articleStateIndex: 0,
+      parameters: {
+        tags: "",
+        category: "",
+        isPublic: "",
+        articleState: ""
+      } //切换不同状态传的参数
     };
   },
   created() {
     this.getAllAriticles();
   },
-  filters: {
-    publishTime(val) {
-      console.log(typeof val);
-      let time = val;
-      time.substr(0, 19);
-      // console.log(time)
-      time.replace("T", " ");
-      // console.log(time)
-      return time;
+  watch: {
+    tagIndex: function() {
+      this.parameters.tags = this.tagIndex == 0 ? "" : this.tags[this.tagIndex]
+      this.queryArticle(this.parameters)
     },
+    categoryIndex: function() {
+      this.parameters.category = this.categoryIndex == 0 ? "" : this.categoryIndex
+      this.queryArticle(this.parameters)
+    },
+    isPublicIndex: function() {
+      this.parameters.isPublic = this.isPublicIndex == 0 ? "" : this.isPublicIndex
+      this.queryArticle(this.parameters)
+    },
+    articleStateIndex: function() {
+      this.parameters.articleState = this.articleStateIndex == 0 ? "" : this.articleStateIndex
+      this.queryArticle(this.parameters)  
+    }
+  },
+  filters: {
     category(val) {
       switch (val) {
-        case 0:
+        case 1:
           return "Code";
           break;
-        case 1:
+        case 2:
           return "Life";
         default:
           break;
@@ -128,10 +158,10 @@ export default {
     },
     isPublic(val) {
       switch (val) {
-        case 0:
+        case 1:
           return "公开";
           break;
-        case 1:
+        case 2:
           return "私密";
         default:
           break;
@@ -139,10 +169,10 @@ export default {
     },
     articleState(val) {
       switch (val) {
-        case 0:
+        case 1:
           return "发布";
           break;
-        case 1:
+        case 2:
           return "草稿";
         default:
           break;
@@ -150,19 +180,21 @@ export default {
     }
   },
   methods: {
-    switchTag(index) {
-      this.tagIndex = index;
-      let tags = index == 0 ? "" : this.tags[index];
+    getAllAriticles() {
       axios
-        .get(`/api/v1/articles/queryArticle?tags=${tags}`)
+        .get(`/api/v1/articles/getAllArticle`)
         .then(res => {
           this.allArticles = res.data;
         })
         .catch(err => {});
     },
-    getAllAriticles() {
+    queryArticle(params) {
       axios
-        .get(`/api/v1/articles/getAllArticle`)
+        .post(`/api/v1/articles/queryArticle`, params, {
+          headers: {
+            Authorization: `Bearer ${localStorage.joeyToken}`
+          }
+        })
         .then(res => {
           this.allArticles = res.data;
         })

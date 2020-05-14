@@ -9,15 +9,27 @@
       </ul>
     </div>
     <div class="tags">
-      <div class="tagFn clear">
-        <div class="addTag">
-          <span>增加标签</span>
-        </div>
-        <div class="searchTag">
-          <input type="text" name="search" placeholder="name...">
+      <div class="tagFn">
+        <div class="addTag" @click="addTag">增加标签</div>
+        <!-- <div class="searchTag">
+          <input type="text" name="search" placeholder="name..." />
           <svg-icon icon-class="sousuo"></svg-icon>
-        </div>
+        </div> -->
       </div>
+      <el-dialog title="添加标签" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="标签名称" :label-width="formLabelWidth">
+            <el-input v-model="form.name" clearable autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="标签描述" :label-width="formLabelWidth">
+            <el-input v-model="form.description" clearable autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitTag">确 定</el-button>
+        </div>
+      </el-dialog>
       <table>
         <thead>
           <tr>
@@ -28,105 +40,19 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(tag,index) in tagList" :key="index">
             <td>
               <svg-icon icon-class="name"></svg-icon>
-              CSS
+              {{tag.name}}
             </td>
-            <td>
+            <td style="width:70%;">
               <svg-icon icon-class="describe"></svg-icon>
-              CSS世界</td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>
-              1</td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
+              {{tag.description}}
             </td>
-          </tr>
-          <tr>
+            <td>{{index+1}}</td>
             <td>
-              <svg-icon icon-class="name"></svg-icon>
-              React
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>
-              前端框架</td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>
-              0</td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>
-              Http
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>
-              Http相关</td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>
-              0</td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>
-              Node
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>
-              RESTful API，koa</td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>
-              0</td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>
-              Vue
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>
-              世界上最好的框架</td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>
-              0</td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>
-              JavaScript
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>
-              JavaScript基础及深入</td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>
-              0</td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
+              <span @click="alterTag(tag)">修改</span>
+              <span @click="deleteTag(tag.id)">删除</span>
               <svg-icon icon-class="drag"></svg-icon>
             </td>
           </tr>
@@ -138,8 +64,113 @@
 
 <script>
 export default {
-  name: 'articleTags'
-}
+  name: "articleTags",
+  data() {
+    return {
+      tagList: [],
+      dialogFormVisible: false,
+      form: {
+        name: "",
+        description: "",
+        tagState: false, //标签的状态 默认为新增
+        tagId:''
+      },
+      formLabelWidth: "100px"
+    };
+  },
+  created() {
+    this.getAllTag();
+  },
+  methods: {
+    addTag() {
+      this.dialogFormVisible = true;
+      this.form.tagState = false;
+      this.form.name = "";
+      this.form.description = "";
+    },
+    deleteTag(id) {
+      axios
+        .delete(`/api/v1/tags/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.joeyToken}`
+          }
+        })
+        .then(res => {
+          if (res.status == 200) {
+            this.getAllTag();
+            this.$notify({
+              title: "成功",
+              message: "删除标签成功",
+              type: "success"
+            });
+          }
+        });
+    },
+    getAllTag() {
+      axios
+        .get(`/api/v1/tags`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.joeyToken}`
+          }
+        })
+        .then(res => {
+          this.tagList = res.data;
+        });
+    },
+    alterTag(tag) {
+      this.dialogFormVisible = true;
+      this.form.tagState = true;
+      this.form.name = tag.name;
+      this.form.description = tag.description;
+      this.form.tagId = tag.id
+    },
+    submitTag() {
+      let params = {
+        name: this.form.name,
+        description: this.form.description
+      };
+      if (!this.form.tagState) {
+        axios
+          .post(`/api/v1/tags`, params, {
+            headers: {
+              Authorization: `Bearer ${localStorage.joeyToken}`
+            }
+          })
+          .then(res => {
+            const data = res;
+            if (res.status == 200) {
+              this.getAllTag();
+              this.dialogFormVisible = false;
+              this.$notify({
+                title: "成功",
+                message: "添加标签成功",
+                type: "success"
+              });
+            }
+          })
+          .catch(err => {});
+      } else {
+        axios
+          .put(`/api/v1/tags/${this.form.tagId}`, params, {
+            headers: {
+              Authorization: `Bearer ${localStorage.joeyToken}`
+            }
+          })
+          .then(res => {
+            if (res.status == 200) {
+              this.getAllTag();
+              this.dialogFormVisible = false;
+              this.$notify({
+                title: "成功",
+                message: "修改标签成功",
+                type: "success"
+              });
+            }
+          });
+      }
+    }
+  }
+};
 </script>
 
 <style lang="less">
@@ -171,18 +202,16 @@ export default {
     box-sizing: border-box;
     margin: 10px 0;
     .tagFn {
+      display: flex;
+      justify-content: space-between;
       .addTag {
-        float: left;
+        padding: 6px 12px;
+        border: 1px solid #c4c4c4;
+        border-radius: 6px;
+        text-align: center;
         font-size: 14px;
         color: #1f2b3d;
-        span {
-          display: block;
-          padding: 5px 8px;
-          border: 1px solid #c4c4c4;
-          border-radius: 6px;
-          text-align: center;
-          box-sizing: border-box;
-        }
+        cursor: pointer;
       }
       .searchTag {
         width: 176px;
@@ -214,14 +243,17 @@ export default {
       border-collapse: collapse;
       tr {
         td {
+          height: 38px;
           font-size: 14px;
           color: #3d4757;
-          height: 32px;
           outline: 1px solid #e7ecf1;
           border: 1px solid #ebeff3;
           text-indent: 15px;
-          svg{
+          svg {
             vertical-align: -3px;
+          }
+          span {
+            cursor: pointer;
           }
           &:last-of-type span {
             display: inline-block;
@@ -238,6 +270,9 @@ export default {
             &:last-of-type {
               background-color: #d9544e;
             }
+          }
+          &:last-of-type {
+            text-align: center;
           }
         }
       }
