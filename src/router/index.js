@@ -6,84 +6,133 @@ import Layout from '@/views/layout'
 Vue.use(VueRouter)
 const router = new VueRouter({
 	mode: 'history',
+	base: '/admin/',
 	routes: [
 		{
 			path: '/redirect',
 			component: Layout,
-			hidden: true,
-			children: [{
-				path: '/redirect/:path*',
-				component: () => import('@/views/redirect/index')
-			}]
+			meta: {
+				title: '重定向',
+				keepAlive: false, //是否缓存
+			},
+			children: [
+				{
+					path: '/redirect/:path*',
+					component: () => import('@/views/redirect/index')
+				}
+			]
 		},
 		{
 			path: '',
 			component: Layout,
 			redirect: 'dashboard',
-			children: [{
-				path: 'dashboard',
-				component: () => import('@/views/dashboard/index'),
-				name: 'dashboard'
-			}]
+			meta: {
+				title: '我的面板',
+				keepAlive: false, //是否缓存
+			},
+			children: [
+				{
+					path: 'dashboard',
+					component: () => import('@/views/dashboard/index'),
+					name: 'dashboard'
+				}
+			]
 		},
 		{
 			path: '/article',
 			component: Layout,
-			children: [{
-				path: 'list',
-				component: () => import('@/views/article/list.vue'),
-				name: 'articleList'
-			},
-			{
-				path: 'release',
-				component: () => import('@/views/article/release.vue'),
-				name: 'articleRelease'
-			}
+			children: [
+				{
+					path: 'list',
+					component: () => import('@/views/article/list.vue'),
+					name: 'articleList',
+					meta: {
+						title: '文章列表',
+						keepAlive: false, //是否缓存
+					}
+				},
+				{
+					path: 'release',
+					component: () => import('@/views/article/release.vue'),
+					name: 'articleRelease',
+					meta: {
+						title: '发布文章',
+						keepAlive: false, //是否缓存
+					}
+				}
 			]
 		},
 		{
 			path: '/tag',
 			component: Layout,
 			redirect: 'articleTag',
-			children: [{
-				path: '',
-				component: () => import('@/views/article_tags/index'),
-				name: 'analysis'
-			}]
+			meta: {
+				title: '文章标签',
+				keepAlive: false, //是否缓存
+			},
+			children: [
+				{
+					path: '',
+					component: () => import('@/views/article_tags/index'),
+					name: 'analysis'
+				}
+			]
 		},
 		{
 			path: '/login',
-			component: Login
+			component: Login,
+			meta: {
+				title: '登录',
+				keepAlive: false, //是否缓存
+			},
 		},
 		{
 			path: '/book',
 			component: Layout,
 			redirect: 'book',
-			children: [{
-				path: '',
-				component: () => import('@/views/book/index'),
-				name: 'book'
-			}]
+			meta: {
+				title: '阅读列表',
+				keepAlive: false, //是否缓存
+			},
+			children: [
+				{
+					path: '',
+					component: () => import('@/views/book/index'),
+					name: 'book'
+				}
+			]
 		},
 		{
 			path: '/personal',
 			component: Layout,
 			redirect: 'personal',
-			children: [{
-				path: '',
-				component: () => import('@/views/personal_center/index'),
-				name: 'personal'
-			}]
+			meta: {
+				title: '个人中心',
+				keepAlive: false, //是否缓存
+			},
+			children: [
+				{
+					path: '',
+					component: () => import('@/views/personal_center/index'),
+					name: 'personal'
+				}
+			]
 		},
 		{
 			path: '/analysis',
 			component: Layout,
 			redirect: 'analysis',
-			children: [{
-				path: '',
-				component: () => import('@/views/data_analysis/index'),
-				name: 'dataAnalysis'
-			}]
+			meta: {
+				title: '数据分析',
+				keepAlive: false, //是否缓存
+			},
+			children: [
+				{
+					path: '',
+					component: () => import('@/views/data_analysis/index'),
+					name: 'dataAnalysis'
+				}
+			]
 		}
 	]
 })

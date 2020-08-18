@@ -1,8 +1,11 @@
 <template>
   <section class="AppMain">
     <transition name="fade" mode="out-in">
+      <router-view v-if="!$route.meta.keepAlive" />
+    </transition>
+    <transition name="fade" mode="out-in">
       <keep-alive>
-        <router-view :key="key"/>
+        <router-view v-if="$route.meta.keepAlive" />
       </keep-alive>
     </transition>
   </section>
@@ -10,13 +13,8 @@
 
 <script>
 export default {
-  name: 'appmain',
-  computed: {
-    key () {
-      return this.$route.fullPath
-    }
-  }
-}
+  name: "appmain",
+};
 </script>
 
 <style lang="less">
@@ -28,13 +26,13 @@ export default {
   overflow: hidden;
   @keyframes fadeIn {
     from {
-        opacity: 0;
-        transform: scale3d(.98, .98, .98);
+      opacity: 0;
+      transform: scale3d(0.98, 0.98, 0.98);
     }
 
     to {
-        opacity: 1;
-        transform: scale3d(1, 1, 1);
+      opacity: 1;
+      transform: scale3d(1, 1, 1);
     }
   }
 
@@ -44,13 +42,13 @@ export default {
   }
   @keyframes fadeOut {
     from {
-        opacity: 1;
-        transform: scale3d(1, 1, 1);
+      opacity: 1;
+      transform: scale3d(1, 1, 1);
     }
 
     to {
-        opacity: 0;
-        transform: scale3d(.98, .98, .98);
+      opacity: 0;
+      transform: scale3d(0.98, 0.98, 0.98);
     }
   }
 

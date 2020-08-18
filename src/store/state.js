@@ -1,7 +1,12 @@
 export default {
-    id: '',
-    title: '',
-    tags: '',
-    content: '',
-    isPublished: ''
+    state: {
+        id: '',
+        title: '',
+        category: '',
+        isPublic: '',
+        articleState: '',
+        tags: '',
+        publishTime: '',
+        content: ''
+    }
 }

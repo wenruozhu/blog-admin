@@ -1,52 +1,59 @@
 <template>
-    <div class="login">
-        <div class="login-container">
-        <header>
-            <p>自由de气息</p>
-        </header>
-        <section class="form">
-            <div class="user">
-                <input type="text" id="user" placeholder="账号" v-model="username">
-            </div>
-            <div class="password">
-                <input type="password" id="password" placeholder="密码" v-model="password" @keyup.enter="login">
-            </div>
-            <div class="submit">
-                <input type="submit" value="登录" @click="login">
-            </div>
-        </section>
+  <div class="login">
+    <div class="login-container">
+      <header>
+        <p>自由de气息</p>
+      </header>
+      <section class="form">
+        <div class="user">
+          <input type="text" id="user" placeholder="账号" v-model="username" />
         </div>
+        <div class="password">
+          <input
+            type="password"
+            id="password"
+            placeholder="密码"
+            v-model="password"
+            @keyup.enter="login"
+          />
+        </div>
+        <div class="submit">
+          <input type="submit" value="登录" @click="login" />
+        </div>
+      </section>
     </div>
+  </div>
 </template>
 <script>
-import md5 from 'md5'
+import md5 from "md5";
 export default {
-  name: 'login',
-  data () {
+  name: "login",
+  data() {
     return {
-      username: '',
-      password: ''
-    }
+      username: "",
+      password: ""
+    };
   },
   methods: {
-    login () {
-      axios.post(
-        '/api/v1/tokens',
-        {
-          username: this.username,
-          password: md5(this.password)
-        }
-      ).then(res => {
-        const data = res.data
-        localStorage.setItem('joeyToken', data)
-        this.$router.push('/')
-      }).catch((err) => {
-        const errorMsg = err.response.data.error
-        alert(errorMsg)
-      })
+    login() {
+      let params = {
+        username: this.username,
+        password: md5(this.password)
+      };
+      axios
+        .post("/api/v1/tokens", params)
+        .then(res => {
+          const data = res.data;
+          localStorage.setItem("joeyToken", data);
+          this.$router.push("/");
+        })
+        .catch(err => {
+          const errorMsg = err.response.data.error;
+          alert(errorMsg);
+        });
     }
   }
-}
+};
 </script>
 <style lang="less">
 .login {
@@ -95,7 +102,7 @@ export default {
         }
       }
       .submit {
-          input {
+        input {
           cursor: pointer;
           font-size: 20px;
           height: 36px;

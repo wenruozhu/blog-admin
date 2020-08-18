@@ -88,7 +88,7 @@ export default {
       article: false
     };
   },
-  methods: {}
+  methods: {},
 };
 </script>
 <style lang="less">

@@ -14,9 +14,9 @@
         <!-- <div class="searchTag">
           <input type="text" name="search" placeholder="name..." />
           <svg-icon icon-class="sousuo"></svg-icon>
-        </div> -->
+        </div>-->
       </div>
-      <el-dialog title="添加标签" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="form">
           <el-form-item label="标签名称" :label-width="formLabelWidth">
             <el-input v-model="form.name" clearable autocomplete="off"></el-input>
@@ -49,7 +49,7 @@
               <svg-icon icon-class="describe"></svg-icon>
               {{tag.description}}
             </td>
-            <td>{{index+1}}</td>
+            <td>{{tagCount[index][0].num}}</td>
             <td>
               <span @click="alterTag(tag)">修改</span>
               <span @click="deleteTag(tag.id)">删除</span>
@@ -67,15 +67,17 @@ export default {
   name: "articleTags",
   data() {
     return {
+      tagCount: [],
       tagList: [],
       dialogFormVisible: false,
       form: {
         name: "",
         description: "",
         tagState: false, //标签的状态 默认为新增
-        tagId:''
+        tagId: ""
       },
-      formLabelWidth: "100px"
+      formLabelWidth: "100px",
+      title: "添加标签"
     };
   },
   created() {
@@ -83,10 +85,11 @@ export default {
   },
   methods: {
     addTag() {
-      this.dialogFormVisible = true;
       this.form.tagState = false;
+      this.title = "添加标签";
       this.form.name = "";
       this.form.description = "";
+      this.dialogFormVisible = true;
     },
     deleteTag(id) {
       axios
@@ -114,59 +117,77 @@ export default {
           }
         })
         .then(res => {
-          this.tagList = res.data;
+          this.tagCount = res.data.count;
+          this.tagList = res.data.tags;
         });
     },
     alterTag(tag) {
-      this.dialogFormVisible = true;
       this.form.tagState = true;
+      this.title = "修改标签";
       this.form.name = tag.name;
       this.form.description = tag.description;
-      this.form.tagId = tag.id
+      this.form.tagId = tag.id;
+      this.dialogFormVisible = true;
     },
     submitTag() {
       let params = {
         name: this.form.name,
         description: this.form.description
       };
-      if (!this.form.tagState) {
-        axios
-          .post(`/api/v1/tags`, params, {
-            headers: {
-              Authorization: `Bearer ${localStorage.joeyToken}`
-            }
-          })
-          .then(res => {
-            const data = res;
-            if (res.status == 200) {
-              this.getAllTag();
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: "添加标签成功",
-                type: "success"
-              });
-            }
-          })
-          .catch(err => {});
+      if (this.form.name == "") {
+        this.$notify({
+          title: "警告",
+          message: "标签名称不能为空",
+          type: "warning"
+        });
+        return;
+      } else if (this.form.description == "") {
+        this.$notify({
+          title: "警告",
+          message: "标签描述不能为空",
+          type: "warning"
+        });
+        return;
       } else {
-        axios
-          .put(`/api/v1/tags/${this.form.tagId}`, params, {
-            headers: {
-              Authorization: `Bearer ${localStorage.joeyToken}`
-            }
-          })
-          .then(res => {
-            if (res.status == 200) {
-              this.getAllTag();
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: "修改标签成功",
-                type: "success"
-              });
-            }
-          });
+        if (!this.form.tagState) {
+          axios
+            .post(`/api/v1/tags`, params, {
+              headers: {
+                Authorization: `Bearer ${localStorage.joeyToken}`
+              }
+            })
+            .then(res => {
+              const data = res;
+              if (res.status == 200) {
+                this.getAllTag();
+                this.dialogFormVisible = false;
+                this.$notify({
+                  title: "成功",
+                  message: "添加标签成功",
+                  type: "success"
+                });
+              }
+            })
+            .catch(err => {});
+        } else {
+          axios
+            .put(`/api/v1/tags/${this.form.tagId}`, params, {
+              headers: {
+                Authorization: `Bearer ${localStorage.joeyToken}`
+              }
+            })
+            .then(res => {
+              if (res.status == 200) {
+                this.getAllTag();
+                this.dialogFormVisible = false;
+                this.$notify({
+                  title: "成功",
+                  message: "修改标签信息成功",
+                  type: "success"
+                });
+              }
+            });
+        }
       }
     }
   }

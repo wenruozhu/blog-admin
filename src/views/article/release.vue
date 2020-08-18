@@ -6,7 +6,6 @@
         <li>
           <span>标题：</span>
           <input type="text" name="title" v-model="title" placeholder="文章标题" />
-          <span>{{title}}</span>
         </li>
         <li>
           <span>分类：</span>
@@ -15,17 +14,15 @@
             <label for="code">Code</label>
             <input type="radio" name="category" value="2" v-model="category" id="life" />
             <label for="life">Life</label>
-            <span>{{category}}</span>
           </div>
         </li>
         <li>
           <span>公开：</span>
           <div class="public">
-            <input type="radio" name="public" checked value="1" v-model="articleState" id="public" />
+            <input type="radio" name="public" checked value="1" v-model="isPublic" id="public" />
             <label for="public">公开</label>
-            <input type="radio" name="public" value="2" v-model="articleState" id="private" />
+            <input type="radio" name="public" value="2" v-model="isPublic" id="private" />
             <label for="private">私密</label>
-            <span>{{articleState}}</span>
           </div>
         </li>
         <li>
@@ -36,35 +33,26 @@
               name="published"
               checked
               value="1"
-              v-model="isPublic"
+              v-model="articleState"
               id="published"
             />
             <label for="published">发布</label>
-            <input type="radio" name="draft" value="2" v-model="isPublic" id="draft" />
+            <input type="radio" name="draft" value="2" v-model="articleState" id="draft" />
             <label for="draft">草稿</label>
-            <span>{{isPublic}}</span>
           </div>
         </li>
         <li>
           <span>tag：</span>
           <div class="tag">
-            <input type="checkbox" name="tag" value="CSS" id="css" v-model="tags" />
-            <label for="css">CSS</label>
-            <input type="checkbox" name="tag" value="JavaScript" id="js" v-model="tags" />
-            <label for="js">JavaScript</label>
-            <input type="checkbox" name="tag" value="Vue" id="vue" v-model="tags" />
-            <label for="vue">Vue</label>
-            <input type="checkbox" name="tag" value="React" id="react" v-model="tags" />
-            <label for="react">React</label>
-            <input type="checkbox" name="tag" value="Http" id="http" v-model="tags" />
-            <label for="http">Http</label>
-            <input type="checkbox" name="tag" value="Node" id="node" v-model="tags" />
-            <label for="node">Node</label>
-            <span>{{tags}}</span>
+            <ul>
+              <li v-for="(tag,index) in tagList">
+                <input type="checkbox" name="tag" :value="tag.name" :id="tag.name" v-model="tags" />
+                <label :for="tag.name">{{tag.name}}</label>
+              </li>
+            </ul>
           </div>
         </li>
         <li class="btn">
-          <!-- <input type="reset" value="重置"> -->
           <button @click="publishArticle">发布</button>
         </li>
       </ul>
@@ -85,7 +73,8 @@ export default {
       articleState: 1, //1 发布 2 草稿
       isPublic: 1, //1 公开 2 私密
       tags: [],
-      content: "Edit Your Content Here!",
+      tagList: [],
+      content: "say something",
       // 富文本编辑器配置
       config: {
         events: {
@@ -190,20 +179,17 @@ export default {
     };
   },
   created() {
-    axios
-      .post(
-        `/api/v1/articles`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        }
-      )
-      .then(res => {
-        this.articleId = res.data.insertId;
-      })
-      .catch(err => {});
+    this.getAllTag();
+    if (this.$route.params.edit) {
+      const article = this.$store.state;
+      this.articleId = article.id;
+      this.title = article.title;
+      this.category = article.category;
+      this.articleState = article.articleState;
+      this.isPublic = article.isPublic;
+      this.tags = JSON.parse(article.tags);
+      this.content = article.content;
+    }
   },
   methods: {
     publishArticle() {
@@ -216,21 +202,61 @@ export default {
         tags: JSON.stringify(this.tags),
         content: this.content
       };
+      if (this.$route.params.edit) {
+        axios
+          .put(`/api/v1/articles/update/${this.articleId}`, params, {
+            headers: {
+              Authorization: `Bearer ${localStorage.joeyToken}`
+            }
+          })
+          .then(res => {
+            if (res.status == 200) {
+              this.$router.push("/article/list");
+              setTimeout(() => {
+                this.$notify({
+                  title: "成功",
+                  message: "文章更新成功",
+                  type: "success"
+                });
+              }, 300);
+            }
+          });
+      } else {
+        if (!this.title) {
+          this.$notify({
+            title: "提示",
+            message: "标题不能为空",
+            type: "warning"
+          });
+          return;
+        }
+        axios
+          .post(`/api/v1/articles/`, params, {
+            headers: {
+              Authorization: `Bearer ${localStorage.joeyToken}`
+            }
+          })
+          .then(res => {
+            if (res.status == 200) {
+              this.$notify({
+                title: "成功",
+                message: "文章发布成功",
+                type: "success"
+              });
+              this.$router.push("/article/list");
+            }
+          });
+      }
+    },
+    getAllTag() {
       axios
-        .put(`/api/v1/articles/publish/${this.articleId}`, params, {
+        .get(`/api/v1/tags`, {
           headers: {
             Authorization: `Bearer ${localStorage.joeyToken}`
           }
         })
         .then(res => {
-          if (res.status == 200) {
-            this.$notify({
-              title: "成功",
-              message: "文章发布成功",
-              type: "success"
-            });
-            this.$router.push('/article/list')
-          }
+          this.tagList = res.data.tags;
         });
     }
   }
@@ -254,7 +280,7 @@ export default {
     }
     ul {
       li {
-        height: 50px;
+        line-height: 50px;
         position: relative;
         .category,
         .public,
@@ -266,6 +292,11 @@ export default {
           label {
             margin: 12px;
           }
+          ul {
+            li {
+              display: inline-block;
+            }
+          }
         }
         span {
           font-size: 12px;
@@ -276,7 +307,10 @@ export default {
           height: 28px;
           text-indent: 8px;
           position: absolute;
+          top: 0;
           left: 72px;
+          bottom: 0;
+          margin: auto;
           border: 1px solid #d2d9e4;
           border-radius: 6px;
         }
@@ -284,10 +318,11 @@ export default {
           input,
           button {
             font-size: 12px;
-            padding: 8px 18px;
+            padding: 8px 28px;
             color: #fff;
             border-radius: 6px;
             background-color: #f56c6c;
+            cursor: pointer;
             margin-right: 12px;
           }
           button {

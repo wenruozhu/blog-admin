@@ -8,33 +8,30 @@
         <li class="cur">阅读列表</li>
       </ul>
     </div>
-    <div class="tags">
-      <div class="tagFn">
-        <div class="addTag">
-          <span @click="dialogFormVisible = true">添加书籍</span>
-        </div>
-        <div class="searchTag">
+    <div class="books">
+      <div class="bookFn">
+        <div class="addBook" @click="addBook">添加书籍</div>
+        <!-- <div class="searchTag">
           <input type="text" name="search" placeholder="name..." />
           <svg-icon icon-class="sousuo"></svg-icon>
-        </div>
+        </div>-->
       </div>
-      <el-dialog title="添加书籍" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="form">
-          <el-form-item label="书籍名称" :label-width="formLabelWidth">
+          <el-form-item label="书籍名称" clearable :label-width="formLabelWidth">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="书籍作者" :label-width="formLabelWidth">
+          <el-form-item label="书籍作者" clearable :label-width="formLabelWidth">
             <el-input v-model="form.author" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="书籍评分" :label-width="formLabelWidth">
+          <el-form-item label="书籍评分" clearable :label-width="formLabelWidth">
             <el-input v-model="form.score" autocomplete="off"></el-input>
-
             <!-- <el-rate v-model="form.score" :colors="form.colors"></el-rate> -->
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addBook">确 定</el-button>
+          <el-button type="primary" @click="submitChange">确 定</el-button>
         </div>
       </el-dialog>
       <table>
@@ -47,104 +44,36 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(book,index) in inf_data" :key="index">
             <td>
-              <svg-icon icon-class="name"></svg-icon>CSS
+              <svg-icon icon-class="name"></svg-icon>
+              {{book.name}}
             </td>
             <td>
-              <svg-icon icon-class="describe"></svg-icon>CSS世界
+              <svg-icon icon-class="describe"></svg-icon>
+              {{book.author}}
             </td>
             <td>
-              <svg-icon icon-class="number"></svg-icon>1
+              <svg-icon icon-class="number"></svg-icon>
+              {{book.score}}
             </td>
             <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>React
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>前端框架
-            </td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>0
-            </td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>Http
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>Http相关
-            </td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>0
-            </td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>Node
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>RESTful API，koa
-            </td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>0
-            </td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>Vue
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>世界上最好的框架
-            </td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>0
-            </td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
-              <svg-icon icon-class="drag"></svg-icon>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <svg-icon icon-class="name"></svg-icon>JavaScript
-            </td>
-            <td>
-              <svg-icon icon-class="describe"></svg-icon>JavaScript基础及深入
-            </td>
-            <td>
-              <svg-icon icon-class="number"></svg-icon>0
-            </td>
-            <td>
-              <span>修改</span>
-              <span>删除</span>
+              <span @click="editBook(book)">修改</span>
+              <span @click="deleteBook(book.id)">删除</span>
               <svg-icon icon-class="drag"></svg-icon>
             </td>
           </tr>
         </tbody>
       </table>
+      <div class="pagination" v-show="pageNum>10">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          @current-change="pageChange"
+          :current-page="currentPage"
+          :total="pageNum"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -154,35 +83,152 @@ export default {
   name: "book",
   data() {
     return {
-      dialogTableVisible: false,
+      bookList: "",
       dialogFormVisible: false,
       form: {
+        bookId: "",
         name: "",
         author: "",
-        score: ""
-        /* score: null,
-        colors: ['#99A9BF', '#F7BA2A', '#FF9900'] */
+        score: "",
+        bookState: false //记录书籍编辑状态 false为新增 true为修改
       },
-      formLabelWidth: "100px"
+      formLabelWidth: "100px",
+      title: "添加书籍",
+      inf_data: "", //显示数据
+      pageNum: 0, //页码数
+      pageIdx: 1, //页码索引
+      currentPage: 1,
+      all_data: "" //所有数据
     };
+  },
+  created() {
+    this.getAllBook();
   },
   methods: {
     addBook() {
-      let params = {
-        name: this.form.name,
-        author: this.form.author,
-        score: this.form.score
-      };
+      this.form.name = "";
+      this.form.author = "";
+      this.form.score = "";
+      this.title = "添加书籍";
+      this.form.bookState = false;
+      this.dialogFormVisible = true;
+    },
+    deleteBook(bookId) {
       axios
-        .post(`/api/v1/book`, params, {
+        .delete(`/api/v1/book/${bookId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.joeyToken}`
           }
         })
         .then(res => {
-          console.log(res);
+          if (res.status == 200) {
+            this.getAllBook();
+            this.$notify({
+              title: "成功",
+              message: "删除书籍成功",
+              type: "success"
+            });
+          }
+        });
+    },
+    getAllBook() {
+      axios
+        .get(`/api/v1/book`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.joeyToken}`
+          }
+        })
+        .then(res => {
+          const paging_data = this.data_paging(res.data, 8);
+          this.pageNum = paging_data.total;
+          this.currentPage = 1;
+          this.inf_data = paging_data.da_ta;
+          this.all_data = paging_data.value_data;
+          this.pageChange(this.pageIdx);
         })
         .catch(err => {});
+    },
+    editBook(book) {
+      this.dialogFormVisible = true;
+      this.form.bookState = true;
+      this.form.bookId = book.id;
+      this.form.name = book.name;
+      this.form.author = book.author;
+      this.form.score = book.score;
+      this.title = "修改书籍信息";
+    },
+    submitChange() {
+      let params = {
+        name: this.form.name,
+        author: this.form.author,
+        score: this.form.score
+      };
+      if (this.form.name == "") {
+        this.$notify({
+          title: "警告",
+          message: "书籍名称不能为空",
+          type: "warning"
+        });
+        return;
+      } else if (this.form.author == "") {
+        this.$notify({
+          title: "警告",
+          message: "书籍作者不能为空",
+          type: "warning"
+        });
+        return;
+      } else if (this.form.score == "") {
+        this.$notify({
+          title: "警告",
+          message: "书籍评分不能为空",
+          type: "warning"
+        });
+        return;
+      } else {
+        if (!this.form.bookState) {
+          axios
+            .post(`/api/v1/book`, params, {
+              headers: {
+                Authorization: `Bearer ${localStorage.joeyToken}`
+              }
+            })
+            .then(res => {
+              if (res.status == 200) {
+                this.getAllBook();
+                this.dialogFormVisible = false;
+                this.$notify({
+                  title: "成功",
+                  message: "添加书籍成功",
+                  type: "success"
+                });
+              }
+            })
+            .catch(err => {});
+        } else {
+          axios
+            .put(`/api/v1/book/${this.form.bookId}`, params, {
+              headers: {
+                Authorization: `Bearer ${localStorage.joeyToken}`
+              }
+            })
+            .then(res => {
+              if (res.status == 200) {
+                this.getAllBook();
+                this.dialogFormVisible = false;
+                this.$notify({
+                  title: "成功",
+                  message: "修改书籍信息成功",
+                  type: "success"
+                });
+              }
+            })
+            .catch(err => {});
+        }
+      }
+    },
+    pageChange(pageIdx) {
+      this.inf_data = this.all_data[pageIdx - 1];
+      this.currentPage = pageIdx;
     }
   }
 };
@@ -210,26 +256,23 @@ export default {
       }
     }
   }
-  .tags {
+  .books {
     background-color: #fff;
     border-radius: 6px;
     padding: 12px;
     box-sizing: border-box;
     margin: 10px 0;
-    .tagFn {
+    .bookFn {
       display: flex;
       justify-content: space-between;
-      .addTag {
+      .addBook {
+        padding: 6px 12px;
+        border: 1px solid #c4c4c4;
+        border-radius: 6px;
+        text-align: center;
+        cursor: pointer;
         font-size: 14px;
         color: #1f2b3d;
-        span {
-          display: block;
-          padding: 5px 8px;
-          border: 1px solid #c4c4c4;
-          border-radius: 6px;
-          text-align: center;
-          box-sizing: border-box;
-        }
       }
       .searchTag {
         width: 176px;
@@ -263,12 +306,15 @@ export default {
         td {
           font-size: 14px;
           color: #3d4757;
-          height: 32px;
+          height: 38px;
           outline: 1px solid #e7ecf1;
           border: 1px solid #ebeff3;
           text-indent: 15px;
           svg {
             vertical-align: -3px;
+          }
+          span {
+            cursor: pointer;
           }
           &:last-of-type span {
             display: inline-block;
@@ -286,11 +332,18 @@ export default {
               background-color: #d9544e;
             }
           }
+          &:last-of-type {
+            text-align: center;
+          }
         }
       }
       thead {
         background-color: #f2f2f2;
       }
+    }
+    .pagination{
+      margin: 20px 0;
+      text-align: center;
     }
   }
 }
