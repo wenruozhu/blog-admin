@@ -42,7 +42,7 @@
           </div>
         </li>
         <li>
-          <span>tag：</span>
+          <span>标签：</span>
           <div class="tag">
             <ul>
               <li v-for="(tag,index) in tagList">

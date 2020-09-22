@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login-container">
       <header>
-        <p>自由de气息</p>
+        <p>🍁</p>
       </header>
       <section class="form">
         <div class="user">

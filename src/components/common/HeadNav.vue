@@ -5,13 +5,13 @@
     </div>
     <div class="otherFn">
       <ul class="clear">
-        <li class="fullScreen">
+        <!-- <li class="fullScreen">
           <svg-icon icon-class="quanping"></svg-icon>
-        </li>
-        <li class="message">
+        </li> -->
+        <!-- <li class="message">
           <svg-icon icon-class="message"></svg-icon>
           <span class="number">10+</span>
-        </li>
+        </li> -->
         <li class="avatarList">
           <div class="avatar">
             <span>
@@ -24,13 +24,6 @@
               <ul>
                 <li>个人信息</li>
                 <li @click="logout">退出登录</li>
-              </ul>
-            </div>
-            <div class="config">
-              <h6>设置中心</h6>
-              <ul>
-                <li>个人设置</li>
-                <li>系统设置</li>
               </ul>
             </div>
           </div>
