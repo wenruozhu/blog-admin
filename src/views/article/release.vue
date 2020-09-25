@@ -74,7 +74,7 @@ export default {
       isPublic: 1, //1 公开 2 私密
       tags: [],
       tagList: [],
-      content: "say something",
+      content: "",
       // 富文本编辑器配置
       config: {
         events: {

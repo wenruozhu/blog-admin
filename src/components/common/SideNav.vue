@@ -48,6 +48,14 @@
         </router-link>
       </li>
       <li>
+        <router-link to="/message">
+          <div class="menuItem">
+            <svg-icon icon-class="message"></svg-icon>
+            <span>留言管理</span>
+          </div>
+        </router-link>
+      </li>
+      <li>
         <router-link to="/book">
           <div class="menuItem">
             <svg-icon icon-class="book"></svg-icon>
@@ -88,7 +96,7 @@ export default {
       article: false
     };
   },
-  methods: {},
+  methods: {}
 };
 </script>
 <style lang="less">

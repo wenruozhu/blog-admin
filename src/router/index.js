@@ -65,7 +65,6 @@ const router = new VueRouter({
 		{
 			path: '/tag',
 			component: Layout,
-			redirect: 'articleTag',
 			meta: {
 				title: '文章标签',
 				keepAlive: false, //是否缓存
@@ -74,7 +73,22 @@ const router = new VueRouter({
 				{
 					path: '',
 					component: () => import('@/views/article_tags/index'),
-					name: 'analysis'
+					name: 'tag'
+				}
+			]
+		},
+		{
+			path: '/message',
+			component: Layout,
+			meta: {
+				title: '文章标签',
+				keepAlive: false, //是否缓存
+			},
+			children: [
+				{
+					path: '',
+					component: () => import('@/views/message/index'),
+					name: 'message'
 				}
 			]
 		},
