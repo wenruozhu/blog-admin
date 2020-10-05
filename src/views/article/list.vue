@@ -150,7 +150,6 @@ export default {
       pageIdx: 1, //页码索引
       currentPage: 1,
       all_data: "", //所有数据
-      activeArticle: 1
     };
   },
   created() {
@@ -185,6 +184,7 @@ export default {
           break;
         case 2:
           return "Life";
+          break;
         default:
           break;
       }
@@ -196,6 +196,7 @@ export default {
           break;
         case 2:
           return "私密";
+          break;
         default:
           break;
       }

@@ -5,7 +5,7 @@
         <li>
           <router-link to="/dashboard">我的面板 /</router-link>
         </li>
-        <li class="cur">阅读列表</li>
+        <li class="cur">留言列表</li>
       </ul>
     </div>
     <table>

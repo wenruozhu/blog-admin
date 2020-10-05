@@ -1,7 +1,7 @@
 <template>
   <div class="headNav">
     <div class="userName">
-      <h1>自由de气息</h1>
+      <h1>文若</h1>
     </div>
     <div class="otherFn">
       <ul class="clear">
