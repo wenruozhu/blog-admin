@@ -115,9 +115,7 @@ export default {
       td {
         font-size: 14px;
         color: #3d4757;
-        height: 38px;
         outline: 1px solid #e7ecf1;
-        border: 1px solid #ebeff3;
         text-indent: 15px;
         &:nth-of-type(2n) {
           max-width: 800px;

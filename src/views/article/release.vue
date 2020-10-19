@@ -56,13 +56,12 @@
           <button @click="publishArticle">发布</button>
         </li>
       </ul>
-      <froala id="edit" :tag="'textarea'" :config="config" v-model="content"></froala>
+      <mavon-editor v-model="content"/>
     </div>
   </div>
 </template>
 
 <script>
-import VueFroala from "vue-froala-wysiwyg";
 export default {
   name: "release",
   data() {
@@ -75,107 +74,6 @@ export default {
       tags: [],
       tagList: [],
       content: "",
-      // 富文本编辑器配置
-      config: {
-        events: {
-          initialized: function() {}
-        },
-        quickInsertEnabled: false,
-        height: 500,
-        imageStyles: {
-          class1: "Class 1",
-          class2: "Class 2"
-        },
-        imageEditButtons: [
-          "imageReplace",
-          "imageAlign",
-          "imageCaption",
-          "imageRemove",
-          "|",
-          "imageLink",
-          "linkOpen",
-          "linkEdit",
-          "linkRemove",
-          "-",
-          "imageDisplay",
-          "imageStyle",
-          "imageAlt",
-          "imageSize"
-        ],
-        toolbarButtons: {
-          moreText: {
-            buttons: [
-              "bold",
-              "italic",
-              "underline",
-              "strikeThrough",
-              "subscript",
-              "superscript",
-              "fontFamily",
-              "fontSize",
-              "textColor",
-              "backgroundColor",
-              "inlineClass",
-              "inlineStyle",
-              "clearFormatting"
-            ],
-            align: "left",
-            buttonsVisible: 3
-          },
-          moreParagraph: {
-            buttons: [
-              "alignLeft",
-              "alignCenter",
-              "formatOLSimple",
-              "alignRight",
-              "alignJustify",
-              "formatOL",
-              "formatUL",
-              "paragraphFormat",
-              "paragraphStyle",
-              "lineHeight",
-              "outdent",
-              "indent",
-              "quote"
-            ],
-            align: "left",
-            buttonsVisible: 3
-          },
-
-          moreRich: {
-            buttons: [
-              "insertLink",
-              "insertImage",
-              "insertVideo",
-              "insertTable",
-              "emoticons",
-              "fontAwesome",
-              "specialCharacters",
-              "embedly",
-              "insertFile",
-              "insertHR"
-            ],
-            align: "left",
-            buttonsVisible: 3
-          },
-
-          moreMisc: {
-            buttons: [
-              "undo",
-              "redo",
-              "fullscreen",
-              "print",
-              "getPDF",
-              "spellChecker",
-              "selectAll",
-              "html",
-              "help"
-            ],
-            align: "right",
-            buttonsVisible: 2
-          }
-        }
-      }
     };
   },
   created() {
@@ -276,9 +174,9 @@ export default {
       font-size: 16px;
       font-weight: 400;
       color: #6b6b6b;
-      padding-bottom: 28px;
     }
     ul {
+      margin: 18px 0;
       li {
         line-height: 50px;
         position: relative;
@@ -331,19 +229,8 @@ export default {
         }
       }
     }
-    .editor {
-      #editor {
-        min-height: 520px;
-        overflow: auto;
-        border: 1px solid #c6c6c6;
-        border-top: none;
-        .ck-editor__main {
-          height: 100%;
-          .ck-editor__editable:not(.ck-focused) {
-            height: 100%;
-          }
-        }
-      }
+    .v-note-wrapper{
+      z-index: 1;
     }
   }
 }
