@@ -1,11 +1,12 @@
 <template>
-  <div class="message">
+  <div class="comments">
     <div class="breadNav">
       <ul>
         <li>
           <router-link to="/dashboard">我的面板 /</router-link>
         </li>
-        <li class="cur">留言列表</li>
+        <li>文章管理 /</li>
+        <li class="cur">文章评论</li>
       </ul>
     </div>
     <table>
@@ -17,12 +18,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(message,index) in messageList" :key="index">
-          <td>{{message.name}}</td>
-          <td>{{message.message}}</td>
+        <tr v-for="(comment,index) in commentList" :key="index">
+          <td>{{comment.nickname}}</td>
+          <td>{{comment.content}}</td>
           <td>
-            <span @click="verifyMessage(message.id)">通过</span>
-            <span @click="deleteMessage(message.id)">删除</span>
+            <span @click="verifyComment(comment.id)">通过</span>
+            <span @click="deleteComment(comment.id)">删除</span>
           </td>
         </tr>
       </tbody>
@@ -35,20 +36,20 @@
         :current-page="currentPage"
         :total="pageNum"
       ></el-pagination>
-    </div>-->
+    </div> -->
   </div>
 </template>
 
 <script>
 export default {
-  name: "message",
+  name: "comments",
   data() {
     return {
-      messageList: [] //获取留言列表
+      commentList: [] //获取评论列表
     };
   },
   created() {
-    this.getMessage();
+    this.getComments();
   },
 
   methods: {
@@ -70,11 +71,11 @@ export default {
           }
         });
     },
-    getMessage() {
+    getComments() {
       axios
-        .get(`/api/v1/message`)
+        .get(`/api/v1/comment`)
         .then(res => {
-          this.messageList = res.data;
+          this.commentList = res.data;
         })
         .catch(err => {
           console.log(err);
@@ -97,13 +98,13 @@ export default {
   }
 };
 </script>
-
-<style lang="less">
-.message {
+<style lang="less" scoped>
+.comments {
   height: 100%;
   padding: 16px;
-  background-color: #fff;
   box-sizing: border-box;
+  background-color: #f2f2f2;
+
   .breadNav {
     ul {
       li {
@@ -112,9 +113,11 @@ export default {
         font-weight: 400;
         color: #798391;
         margin-right: 3px;
+
         &.cur {
           color: #a2aec4;
         }
+
         a {
           color: #5e697c;
         }
@@ -165,6 +168,10 @@ export default {
   }
   .pagination {
     margin: 20px 0;
+    text-align: center;
+  }
+  .el-pagination {
+    margin: 32px 0;
     text-align: center;
   }
 }

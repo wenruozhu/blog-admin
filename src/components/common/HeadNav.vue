@@ -22,7 +22,7 @@
             <div class="user">
               <h6>用户中心</h6>
               <ul>
-                <li>个人信息</li>
+                <li @click="$router.push('/personal')">个人信息</li>
                 <li @click="logout">退出登录</li>
               </ul>
             </div>
@@ -115,7 +115,7 @@ export default {
       .avatarList {
         position: relative;
         .userMenu {
-          width: 120px;
+          width: 100px;
           max-height: 0;
           overflow: hidden;
           background-color: #fff;

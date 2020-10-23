@@ -8,6 +8,10 @@
           <input type="text" name="title" v-model="title" placeholder="文章标题" />
         </li>
         <li>
+          <span>摘要：</span>
+          <textarea name="descript" v-model="descript" cols="30" rows="3"></textarea>
+        </li>
+        <li>
           <span>分类：</span>
           <div class="category">
             <input type="radio" name="category" checked value="1" v-model="category" id="code" />
@@ -56,7 +60,7 @@
           <button @click="publishArticle">发布</button>
         </li>
       </ul>
-      <mavon-editor v-model="content"/>
+      <mavon-editor v-model="content" />
     </div>
   </div>
 </template>
@@ -67,13 +71,14 @@ export default {
   data() {
     return {
       articleId: "", //文章编号
-      title: "",
+      title: "", //标题
+      descript: "", //摘要
       category: 1, //1 code 2 life
       articleState: 1, //1 发布 2 草稿
       isPublic: 1, //1 公开 2 私密
       tags: [],
       tagList: [],
-      content: "",
+      content: ""
     };
   },
   created() {
@@ -82,6 +87,7 @@ export default {
       const article = this.$store.state;
       this.articleId = article.id;
       this.title = article.title;
+      this.descript = article.descript;
       this.category = article.category;
       this.articleState = article.articleState;
       this.isPublic = article.isPublic;
@@ -94,6 +100,7 @@ export default {
       const params = {
         articleId: this.articleId,
         title: this.title,
+        descript: this.descript,
         category: this.category,
         articleState: this.articleState,
         isPublic: this.isPublic,
@@ -178,6 +185,7 @@ export default {
     ul {
       margin: 18px 0;
       li {
+        display: flex;
         line-height: 50px;
         position: relative;
         .category,
@@ -211,6 +219,24 @@ export default {
           margin: auto;
           border: 1px solid #d2d9e4;
           border-radius: 6px;
+          box-sizing: border-box;
+
+        }
+        textarea {
+          width: 320px;
+          height: 80px;
+          line-height: 1.5;
+          position: absolute;
+          top: 0;
+          left: 72px;
+          bottom: 0;
+          margin: auto;
+          resize: none;
+          padding: 0.3rem 0.5rem;
+          border: 1px solid #d2d9e4;
+          color: #24292e;
+          border-radius: 6px;
+          box-sizing: border-box;
         }
         &.btn {
           input,
@@ -227,10 +253,11 @@ export default {
             background-color: #409eff;
           }
         }
+        &:nth-of-type(2) {
+          align-items: center;
+          line-height: 90px;
+        }
       }
-    }
-    .v-note-wrapper{
-      z-index: 1;
     }
   }
 }

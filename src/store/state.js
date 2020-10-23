@@ -2,6 +2,7 @@ export default {
     state: {
         id: '',
         title: '',
+        descript: '',
         category: '',
         isPublic: '',
         articleState: '',

@@ -28,6 +28,14 @@
                 </router-link>
               </li>
               <li>
+                <router-link to="/article/comments">
+                  <div class="subMenuItem">
+                    <svg-icon icon-class="comments"></svg-icon>
+                    <span>文章评论</span>
+                  </div>
+                </router-link>
+              </li>
+              <li>
                 <router-link to="/article/release">
                   <div class="subMenuItem">
                     <svg-icon icon-class="fabu"></svg-icon>

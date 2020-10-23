@@ -52,6 +52,15 @@ const router = new VueRouter({
 					}
 				},
 				{
+					path: 'comments',
+					component: () => import('@/views/article/comments.vue'),
+					name: 'comments',
+					meta: {
+						title: '文章评论',
+						keepAlive: false, //是否缓存
+					}
+				},
+				{
 					path: 'release',
 					component: () => import('@/views/article/release.vue'),
 					name: 'articleRelease',
