@@ -7,10 +7,7 @@ import '@/icons'
 import '../public/reset.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import mavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
 Vue.use(ElementUI);
-Vue.use(mavonEditor)
 Vue.config.productionTip = false
 Vue.prototype.data_paging = function (value, page_sum) { //整理数据，供element分页组件使用
     //数据分页展示

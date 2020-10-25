@@ -272,7 +272,7 @@ export default {
       const formData = new FormData();
       formData.append("avatar", fileList[0]);
       axios
-        .post(`/api/v1/upload`, formData, {
+        .post(`/api/v1/upload/uploadAvatar`, formData, {
           headers: {
             Authorization: `Bearer ${localStorage.joeyToken}`,
             "Content-type": "multipart/form-data"

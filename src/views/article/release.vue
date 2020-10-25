@@ -60,12 +60,14 @@
           <button @click="publishArticle">发布</button>
         </li>
       </ul>
-      <mavon-editor v-model="content" />
+      <mavon-editor ref="md" @imgAdd="$imgAdd" v-model="content"></mavon-editor>
     </div>
   </div>
 </template>
 
 <script>
+import { mavonEditor } from "mavon-editor";
+import "mavon-editor/dist/css/index.css";
 export default {
   name: "release",
   data() {
@@ -163,7 +165,27 @@ export default {
         .then(res => {
           this.tagList = res.data.tags;
         });
+    },
+    // 绑定@imgAdd event
+    $imgAdd(pos, $file) {
+      // 第一步.将图片上传到服务器.
+      var formData = new FormData();
+      formData.append("image", $file);
+      axios
+        .post(`/api/v1/upload/uploadPic`, formData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.joeyToken}`,
+            "Content-type": "multipart/form-data"
+          }
+        })
+        .then(res => {
+          // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+          this.$refs.md.$img2Url(pos, res.data);
+        });
     }
+  },
+  components: {
+    mavonEditor
   }
 };
 </script>
@@ -220,7 +242,6 @@ export default {
           border: 1px solid #d2d9e4;
           border-radius: 6px;
           box-sizing: border-box;
-
         }
         textarea {
           width: 320px;
