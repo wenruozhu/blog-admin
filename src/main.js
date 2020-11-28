@@ -31,7 +31,8 @@ Vue.prototype.data_paging = function (value, page_sum) { //整理数据，供ele
         total: number * 10 //页码
     }
 };
-axios.defaults.baseURL = 'http://localhost:8081'
+axios.defaults.baseURL = 'http://www.wenruozhu.com:8081'
+// axios.defaults.baseURL = 'http://localhost:8081'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 new Vue({

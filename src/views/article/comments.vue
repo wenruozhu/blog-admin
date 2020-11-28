@@ -94,7 +94,26 @@ export default {
           }
         })
         .catch(err => {});
-    }
+    },
+    deleteComment(id) {
+      axios
+        .delete(`/api/v1/comment/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.joeyToken}`
+          }
+        })
+        .then(res => {
+          if (res.status == 200) {
+            this.$notify({
+              title: "成功",
+              message: "删除评论成功",
+              type: "success"
+            });
+            this.getComments();
+          }
+        })
+        .catch(err => {});
+    },
   }
 };
 </script>

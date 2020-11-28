@@ -6,7 +6,7 @@ import Layout from '@/views/layout'
 Vue.use(VueRouter)
 const router = new VueRouter({
 	mode: 'history',
-	base: '/admin/',
+	base: '/',
 	routes: [
 		{
 			path: '/redirect',
