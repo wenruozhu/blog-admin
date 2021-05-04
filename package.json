@@ -9,7 +9,7 @@
     "lint-fix": "eslint --ext .js .vue src --fix"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "element-ui": "^2.13.1",
     "mavon-editor": "^2.9.0",
     "md5": "^2.2.1",
