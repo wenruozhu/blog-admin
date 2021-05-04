@@ -36,7 +36,7 @@
         :current-page="currentPage"
         :total="pageNum"
       ></el-pagination>
-    </div> -->
+    </div>-->
   </div>
 </template>
 
@@ -54,26 +54,20 @@ export default {
 
   methods: {
     deleteMessage(messageId) {
-      axios
-        .delete(`/api/v1/message/${messageId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
-        .then(res => {
-          if (res.status == 200) {
-            this.getMessage();
-            this.$notify({
-              title: "成功",
-              message: "删除留言成功",
-              type: "success"
-            });
-          }
-        });
+      this.axios.delete(this.IP + `/api/v1/message/${messageId}`).then(res => {
+        if (res.status == 200) {
+          this.getMessage();
+          this.$notify({
+            title: "成功",
+            message: "删除留言成功",
+            type: "success"
+          });
+        }
+      });
     },
     getComments() {
-      axios
-        .get(`/api/v1/comment`)
+      this.axios
+        .get(this.IP + `/api/v1/comment`)
         .then(res => {
           this.commentList = res.data;
         })
@@ -82,8 +76,8 @@ export default {
         });
     },
     verifyMessage(messageId) {
-      axios
-        .put(`/api/v1/message/${messageId}`)
+      this.axios
+        .put(this.IP + `/api/v1/message/${messageId}`)
         .then(res => {
           if (res.status == 200) {
             this.$notify({
@@ -96,12 +90,8 @@ export default {
         .catch(err => {});
     },
     deleteComment(id) {
-      axios
-        .delete(`/api/v1/comment/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
+      this.axios
+        .delete(this.IP + `/api/v1/comment/${id}`)
         .then(res => {
           if (res.status == 200) {
             this.$notify({
@@ -113,7 +103,7 @@ export default {
           }
         })
         .catch(err => {});
-    },
+    }
   }
 };
 </script>

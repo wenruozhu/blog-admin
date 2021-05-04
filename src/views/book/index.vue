@@ -114,30 +114,20 @@ export default {
       this.dialogFormVisible = true;
     },
     deleteBook(bookId) {
-      axios
-        .delete(`/api/v1/book/${bookId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
-        .then(res => {
-          if (res.status == 200) {
-            this.getAllBook();
-            this.$notify({
-              title: "成功",
-              message: "删除书籍成功",
-              type: "success"
-            });
-          }
-        });
+      this.axios.delete(this.IP + `/api/v1/book/${bookId}`).then(res => {
+        if (res.status == 200) {
+          this.getAllBook();
+          this.$notify({
+            title: "成功",
+            message: "删除书籍成功",
+            type: "success"
+          });
+        }
+      });
     },
     getAllBook() {
-      axios
-        .get(`/api/v1/book`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
+      this.axios
+        .get(this.IP + `/api/v1/book`)
         .then(res => {
           const paging_data = this.data_paging(res.data, 8);
           this.pageNum = paging_data.total;
@@ -186,12 +176,8 @@ export default {
         return;
       } else {
         if (!this.form.bookState) {
-          axios
-            .post(`/api/v1/book`, params, {
-              headers: {
-                Authorization: `Bearer ${localStorage.joeyToken}`
-              }
-            })
+          this.axios
+            .post(this.IP + `/api/v1/book`, params)
             .then(res => {
               if (res.status == 200) {
                 this.getAllBook();
@@ -205,12 +191,8 @@ export default {
             })
             .catch(err => {});
         } else {
-          axios
-            .put(`/api/v1/book/${this.form.bookId}`, params, {
-              headers: {
-                Authorization: `Bearer ${localStorage.joeyToken}`
-              }
-            })
+          this.axios
+            .put(this.IP + `/api/v1/book/${this.form.bookId}`, params)
             .then(res => {
               if (res.status == 200) {
                 this.getAllBook();
@@ -341,7 +323,7 @@ export default {
         background-color: #f2f2f2;
       }
     }
-    .pagination{
+    .pagination {
       margin: 20px 0;
       text-align: center;
     }

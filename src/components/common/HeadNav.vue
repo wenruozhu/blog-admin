@@ -7,11 +7,11 @@
       <ul class="clear">
         <!-- <li class="fullScreen">
           <svg-icon icon-class="quanping"></svg-icon>
-        </li> -->
+        </li>-->
         <!-- <li class="message">
           <svg-icon icon-class="message"></svg-icon>
           <span class="number">10+</span>
-        </li> -->
+        </li>-->
         <li class="avatarList">
           <div class="avatar">
             <span>
@@ -37,7 +37,7 @@ export default {
   name: "headNav",
   methods: {
     logout() {
-      localStorage.removeItem("joeyToken");
+      sessionStorage.removeItem("joeyToken");
       this.$router.push("/login");
     }
   }

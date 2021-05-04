@@ -53,26 +53,20 @@ export default {
 
   methods: {
     deleteMessage(messageId) {
-      axios
-        .delete(`/api/v1/message/${messageId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
-        .then(res => {
-          if (res.status == 200) {
-            this.getMessage();
-            this.$notify({
-              title: "成功",
-              message: "删除留言成功",
-              type: "success"
-            });
-          }
-        });
+      this.axios.delete(this.IP + `/api/v1/message/${messageId}`).then(res => {
+        if (res.status == 200) {
+          this.getMessage();
+          this.$notify({
+            title: "成功",
+            message: "删除留言成功",
+            type: "success"
+          });
+        }
+      });
     },
     getMessage() {
-      axios
-        .get(`/api/v1/message`)
+      this.axios
+        .get(this.IP + `/api/v1/message`)
         .then(res => {
           this.messageList = res.data;
         })
@@ -81,8 +75,8 @@ export default {
         });
     },
     verifyMessage(messageId) {
-      axios
-        .put(`/api/v1/message/${messageId}`)
+      this.axios
+        .put(this.IP + `/api/v1/message/${messageId}`)
         .then(res => {
           if (res.status == 200) {
             this.$notify({

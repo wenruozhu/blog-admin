@@ -149,7 +149,7 @@ export default {
       pageNum: 0, //页码数
       pageIdx: 1, //页码索引
       currentPage: 1,
-      all_data: "", //所有数据
+      all_data: "" //所有数据
     };
   },
   created() {
@@ -233,12 +233,8 @@ export default {
         .catch(err => {});
     },
     queryArticle(params) {
-      axios
-        .post(`/api/v1/articles/queryArticle`, params, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
+      this.axios
+        .post(this.IP + `/api/v1/articles/queryArticle`, params)
         .then(res => {
           for (const article of res.data) {
             article.publishTime = moment(article.publishTime).format(
@@ -267,12 +263,8 @@ export default {
         });
         return;
       }
-      axios
-        .post(`/api/v1/articles/searchArticle`, params, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
+      this.axios
+        .post(this.IP + `/api/v1/articles/searchArticle`, params)
         .then(res => {
           for (const article of res.data) {
             article.publishTime = moment(article.publishTime).format(
@@ -303,12 +295,8 @@ export default {
       } else {
         params.articleState = state;
       }
-      axios
-        .put(`/api/v1/articles/updateStatus/${id}`, params, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
+      this.axios
+        .put(this.IP + `/api/v1/articles/updateStatus/${id}`, params)
         .then(res => {
           if (res.status == 200) {
             this.$notify({
@@ -321,12 +309,8 @@ export default {
         });
     },
     deleteArticle(id) {
-      axios
-        .delete(`/api/v1/articles/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
+      this.axios
+        .delete(`/api/v1/articles/${id}`)
         .then(res => {
           if (res.status == 200) {
             this.$notify({

@@ -110,12 +110,8 @@ export default {
         content: this.content
       };
       if (this.$route.params.edit) {
-        axios
-          .put(`/api/v1/articles/update/${this.articleId}`, params, {
-            headers: {
-              Authorization: `Bearer ${localStorage.joeyToken}`
-            }
-          })
+        this.axios
+          .put(this.IP + `/api/v1/articles/update/${this.articleId}`, params)
           .then(res => {
             if (res.status == 200) {
               this.$router.push("/article/list");
@@ -137,44 +133,31 @@ export default {
           });
           return;
         }
-        axios
-          .post(`/api/v1/articles/`, params, {
-            headers: {
-              Authorization: `Bearer ${localStorage.joeyToken}`
-            }
-          })
-          .then(res => {
-            if (res.status == 200) {
-              this.$notify({
-                title: "成功",
-                message: "文章发布成功",
-                type: "success"
-              });
-              this.$router.push("/article/list");
-            }
-          });
+        this.axios.post(this.IP + `/api/v1/articles/`, params).then(res => {
+          if (res.status == 200) {
+            this.$notify({
+              title: "成功",
+              message: "文章发布成功",
+              type: "success"
+            });
+            this.$router.push("/article/list");
+          }
+        });
       }
     },
     getAllTag() {
-      axios
-        .get(`/api/v1/tags`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
-        .then(res => {
-          this.tagList = res.data.tags;
-        });
+      this.axios.get(this.IP + `/api/v1/tags`).then(res => {
+        this.tagList = res.data.tags;
+      });
     },
     // 绑定@imgAdd event
     $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       var formData = new FormData();
       formData.append("image", $file);
-      axios
-        .post(`/api/v1/upload/uploadPic`, formData, {
+      this.axios
+        .post(this.IP + `/api/v1/upload/uploadPic`, formData, {
           headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`,
             "Content-type": "multipart/form-data"
           }
         })

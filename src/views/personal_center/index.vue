@@ -13,7 +13,7 @@
       <ul>
         <li>
           <span>标题：</span>
-          <input type="text" name="title" v-model="basicInfo.title" placeholder="自由de气息" />
+          <input type="text" name="title" v-model="basicInfo.title" placeholder="文若" />
         </li>
         <li>
           <span>关键词：</span>
@@ -59,7 +59,7 @@
               id="avatar"
             />
             <label for="avatar"></label>
-            <img :src="userInfo.avatarUrl" alt="我的头像" />
+            <img :src="userInfo.avatarUrl || '../../assets/img/avatar.jpg'" alt="我的头像" />
             <div class="mask">
               <div class="mask-area"></div>
               <div class="mask-content">
@@ -133,8 +133,8 @@ export default {
   },
   methods: {
     getBasicInfo() {
-      axios
-        .get(`/api/v1/personal/basicInfo`)
+      this.axios
+        .get(this.IP + `/api/v1/personal/basicInfo`)
         .then(res => {
           const basicInfo = res.data[0];
           this.basicInfo.title = basicInfo.title;
@@ -155,12 +155,8 @@ export default {
         email: this.basicInfo.email,
         icp: this.basicInfo.icp
       };
-      axios
-        .post(`/api/v1/personal/basicInfo`, params, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
+      this.axios
+        .post(this.IP + `/api/v1/personal/basicInfo`, params)
         .then(res => {
           if (res.status == 200) {
             this.$notify({
@@ -173,8 +169,8 @@ export default {
         .catch(err => {});
     },
     getUserInfo() {
-      axios
-        .get(`/api/v1/personal/userInfo`)
+      this.axios
+        .get(this.IP + `/api/v1/personal/userInfo`)
         .then(res => {
           const userInfo = res.data[0];
           this.userInfo.userId = userInfo.id;
@@ -205,12 +201,8 @@ export default {
           signature: this.userInfo.signature,
           password: md5(this.userInfo.newPassword)
         };
-        axios
-          .post(`/api/v1/personal/userInfo`, params, {
-            headers: {
-              Authorization: `Bearer ${localStorage.joeyToken}`
-            }
-          })
+        this.axios
+          .post(this.IP + `/api/v1/personal/userInfo`, params)
           .then(res => {
             if (res.status == 200) {
               this.$notify({
@@ -252,11 +244,6 @@ export default {
         .then(action => {
           this.submitAvatar();
           avatarFile.value = "";
-          this.$notify({
-            title: "成功",
-            message: "修改头像成功",
-            type: "success"
-          });
         })
         .catch(() => {
           avatarFile.value = "";
@@ -271,14 +258,18 @@ export default {
       const fileList = document.getElementById("avatar").files;
       const formData = new FormData();
       formData.append("avatar", fileList[0]);
-      axios
-        .post(`/api/v1/upload/uploadAvatar`, formData, {
+      this.axios
+        .post(this.IP + `/api/v1/upload/uploadAvatar`, formData, {
           headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`,
             "Content-type": "multipart/form-data"
           }
         })
         .then(res => {
+          this.$notify({
+            title: "成功",
+            message: "修改头像成功",
+            type: "success"
+          });
           this.userInfo.avatarUrl = res.data;
         })
         .catch(err => {});

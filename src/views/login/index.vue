@@ -40,11 +40,11 @@ export default {
         username: this.username,
         password: md5(this.password)
       };
-      axios
-        .post("/api/v1/tokens", params)
+      this.axios
+        .post(this.IP + "/api/v1/tokens", params)
         .then(res => {
           const data = res.data;
-          localStorage.setItem("joeyToken", data);
+          sessionStorage.setItem("joeyToken", data);
           this.$router.push("/");
         })
         .catch(err => {

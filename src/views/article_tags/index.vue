@@ -92,34 +92,22 @@ export default {
       this.dialogFormVisible = true;
     },
     deleteTag(id) {
-      axios
-        .delete(`/api/v1/tags/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
-        .then(res => {
-          if (res.status == 200) {
-            this.getAllTag();
-            this.$notify({
-              title: "成功",
-              message: "删除标签成功",
-              type: "success"
-            });
-          }
-        });
+      this.axios.delete(this.IP + `/api/v1/tags/${id}`).then(res => {
+        if (res.status == 200) {
+          this.getAllTag();
+          this.$notify({
+            title: "成功",
+            message: "删除标签成功",
+            type: "success"
+          });
+        }
+      });
     },
     getAllTag() {
-      axios
-        .get(`/api/v1/tags`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.joeyToken}`
-          }
-        })
-        .then(res => {
-          this.tagCount = res.data.count;
-          this.tagList = res.data.tags;
-        });
+      this.axios.get(this.IP + `/api/v1/tags`).then(res => {
+        this.tagCount = res.data.count;
+        this.tagList = res.data.tags;
+      });
     },
     alterTag(tag) {
       this.form.tagState = true;
@@ -150,12 +138,8 @@ export default {
         return;
       } else {
         if (!this.form.tagState) {
-          axios
-            .post(`/api/v1/tags`, params, {
-              headers: {
-                Authorization: `Bearer ${localStorage.joeyToken}`
-              }
-            })
+          this.axios
+            .post(this.IP + `/api/v1/tags`, params)
             .then(res => {
               const data = res;
               if (res.status == 200) {
@@ -170,12 +154,8 @@ export default {
             })
             .catch(err => {});
         } else {
-          axios
-            .put(`/api/v1/tags/${this.form.tagId}`, params, {
-              headers: {
-                Authorization: `Bearer ${localStorage.joeyToken}`
-              }
-            })
+          this.axios
+            .put(this.IP + `/api/v1/tags/${this.form.tagId}`, params)
             .then(res => {
               if (res.status == 200) {
                 this.getAllTag();

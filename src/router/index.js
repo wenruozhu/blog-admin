@@ -160,24 +160,9 @@ const router = new VueRouter({
 	]
 })
 router.beforeEach((to, from, next) => {
-	if (localStorage.joeyToken) {
-		axios.get(
-			'api/v1/tokens/check', {
-				headers: {
-					Authorization: `Bearer ${localStorage.joeyToken}`
-				}
-			})
-			.then(() => {
-				next()
-			})
-			.catch(() => {
-				// token验证不通过
-				if (to.path !== '/login') {
-					next('login')
-				} else {
-					next()
-				}
-			})
+	if (sessionStorage.joeyToken) {
+		next()
+		
 	} else {
 		if (to.path !== '/login') {
 			next('login')
