@@ -79,7 +79,7 @@
           </tr>
         </thead>
         <tbody style="width:100%">
-          <tr v-for="(article,index) in inf_data">
+          <tr v-for="(article,index) in inf_data" :key="index">
             <td>{{article.title}}</td>
             <td>{{article.publishTime}}</td>
             <td>{{article.category | category}}</td>
