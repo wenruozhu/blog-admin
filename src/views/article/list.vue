@@ -216,7 +216,7 @@ export default {
   methods: {
     getAllAriticles() {
       axios
-        .get(`/api/v1/articles/getAllArticle`)
+        .get(this.IP + `/api/v1/articles/getAllArticle`)
         .then(res => {
           for (const article of res.data) {
             article.publishTime = moment(article.publishTime).format(

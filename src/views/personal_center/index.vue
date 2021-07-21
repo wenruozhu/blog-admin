@@ -13,7 +13,7 @@
       <ul>
         <li>
           <span>标题：</span>
-          <input type="text" name="title" v-model="basicInfo.title" placeholder="文若" />
+          <input type="text" name="title" v-model="basicInfo.title" placeholder="" />
         </li>
         <li>
           <span>关键词：</span>
@@ -21,7 +21,7 @@
         </li>
         <li>
           <span>站点地址：</span>
-          <input type="text" v-model="basicInfo.address" placeholder="https://ziyuzhu.com" />
+          <input type="text" v-model="basicInfo.address" placeholder="" />
         </li>
         <li class="textarea">
           <span>站点描述：</span>
@@ -29,16 +29,16 @@
             cols="30"
             rows="10"
             v-model="basicInfo.description"
-            placeholder="希望是美好的，也许是人间至善，而美好的事物永不消失。"
+            placeholder=""
           ></textarea>
         </li>
         <li>
           <span>电子邮件：</span>
-          <input type="text" v-model="basicInfo.email" placeholder="ziyu@gmail.com" />
+          <input type="text" v-model="basicInfo.email" placeholder="" />
         </li>
         <li>
           <span>ICP备案号：</span>
-          <input type="text" v-model="basicInfo.icp" placeholder="88888888" />
+          <input type="text" v-model="basicInfo.icp" placeholder="" />
         </li>
         <li>
           <span class="save" @click="changeBasicInfo">保存</span>
@@ -71,7 +71,7 @@
         </li>
         <li>
           <span>用户名</span>
-          <input type="text" v-model="userInfo.username" placeholder="自由de气息" />
+          <input type="text" v-model="userInfo.username" placeholder="" />
         </li>
         <!-- <li>
           <span>姓名</span>
@@ -79,7 +79,7 @@
         </li>-->
         <li>
           <span>个性签名</span>
-          <input type="text" v-model="userInfo.signature" placeholder="希望至善" />
+          <input type="text" v-model="userInfo.signature" placeholder="" />
         </li>
         <li>
           <span>原密码</span>
